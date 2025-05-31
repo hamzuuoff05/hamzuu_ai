@@ -64,13 +64,16 @@ function initMobileMenu() {
             }
         });
 
-        // Close menu when a menu link is clicked
+        // Close menu when a menu link is clicked and force navigation
         const menuLinks = menu.querySelectorAll('.nav-link');
         menuLinks.forEach(link => {
-            link.addEventListener('click', () => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent any SPA or default interception
                 if (menu.classList.contains('active')) {
                     toggleMenu();
                 }
+                // Force full page navigation
+                window.location.href = link.href;
             });
         });
     }
