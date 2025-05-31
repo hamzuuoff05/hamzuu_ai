@@ -24,17 +24,45 @@ function handleDesktopWarning() {
 
 // Handle mobile menu with performance optimizations
 function initMobileMenu() {
+    // Get menu elements
+    menuButton = document.querySelector('.menu-cta');
+    menu = document.querySelector('.montfort-menu');
+    overlay = document.querySelector('.overlay');
+
+    // Log if elements are not found
+    if (!menuButton) console.error('Menu button not found');
+    if (!menu) console.error('Menu not found');
+    if (!overlay) console.error('Overlay not found');
+
     if (menuButton && menu && overlay) {
         const toggleMenu = () => {
             requestAnimationFrame(() => {
                 menu.classList.toggle('active');
                 overlay.classList.toggle('active');
                 document.body.classList.toggle('menu-open');
+                
+                // Toggle menu button state
+                menuButton.classList.toggle('active');
+                
+                // Prevent scrolling when menu is open
+                if (menu.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
             });
         };
 
+        // Add click event listeners
         menuButton.addEventListener('click', toggleMenu, { passive: true });
         overlay.addEventListener('click', toggleMenu, { passive: true });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menu.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
     }
 }
 
@@ -54,9 +82,6 @@ function debounce(func, wait) {
 // Initialize everything with performance optimizations
 document.addEventListener('DOMContentLoaded', () => {
     // Cache DOM elements
-    menuButton = document.querySelector('.menu-cta');
-    menu = document.querySelector('.montfort-menu');
-    overlay = document.querySelector('.overlay');
     warning = document.querySelector('.desktop-warning');
 
     // Initialize features
