@@ -3,21 +3,16 @@ let menuButton, menu, overlay, warning;
 
 // Function to check if the device is mobile
 function isMobileDevice() {
-    return (
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-        (window.innerWidth <= 768)
-    );
+    return window.innerWidth <= 768;
 }
 
 // Function to handle the desktop warning
 function handleDesktopWarning() {
     if (!isMobileDevice()) {
         warning.style.display = 'flex';
-        // Prevent scrolling on desktop
         document.body.style.overflow = 'hidden';
     } else {
         warning.style.display = 'none';
-        // Enable scrolling on mobile
         document.body.style.overflow = 'auto';
     }
 }
@@ -36,26 +31,22 @@ function initMobileMenu() {
 
     if (menuButton && menu && overlay) {
         const toggleMenu = () => {
-            requestAnimationFrame(() => {
-                menu.classList.toggle('active');
-                overlay.classList.toggle('active');
-                document.body.classList.toggle('menu-open');
-                
-                // Toggle menu button state
-                menuButton.classList.toggle('active');
-                
-                // Prevent scrolling when menu is open
-                if (menu.classList.contains('active')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = 'auto';
-                }
-            });
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+            menuButton.classList.toggle('active');
+            
+            // Prevent scrolling when menu is open
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
         };
 
         // Add click event listeners
-        menuButton.addEventListener('click', toggleMenu, { passive: true });
-        overlay.addEventListener('click', toggleMenu, { passive: true });
+        menuButton.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
 
         // Close menu on escape key
         document.addEventListener('keydown', (e) => {
@@ -64,16 +55,13 @@ function initMobileMenu() {
             }
         });
 
-        // Close menu when a menu link is clicked and force navigation
+        // Close menu when a menu link is clicked
         const menuLinks = menu.querySelectorAll('.nav-link');
         menuLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent any SPA or default interception
+            link.addEventListener('click', () => {
                 if (menu.classList.contains('active')) {
                     toggleMenu();
                 }
-                // Force full page navigation
-                window.location.href = link.href;
             });
         });
     }
@@ -92,7 +80,7 @@ function debounce(func, wait) {
     };
 }
 
-// Initialize everything with performance optimizations
+// Initialize everything
 document.addEventListener('DOMContentLoaded', () => {
     // Cache DOM elements
     warning = document.querySelector('.desktop-warning');
@@ -102,5 +90,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
 
     // Add debounced resize handler
-    window.addEventListener('resize', debounce(handleDesktopWarning, 100), { passive: true });
+    window.addEventListener('resize', debounce(handleDesktopWarning, 100));
 }); 
