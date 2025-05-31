@@ -2,9 +2,16 @@
 let chatMessages, userInput, sendButton;
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize elements
   chatMessages = document.getElementById('chatMessages');
   userInput = document.getElementById('userInput');
   sendButton = document.getElementById('sendButton');
+
+  // Make sure elements exist
+  if (!chatMessages || !userInput || !sendButton) {
+    console.error('Required chat elements not found');
+    return;
+  }
 
   // Fix for Enter key
   userInput.addEventListener('keypress', function(e) {
@@ -15,9 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Fix for send button
-  sendButton.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleUserMessage();
+  sendButton.addEventListener('click', handleUserMessage);
+
+  // Auto-resize textarea
+  userInput.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
   });
 });
 
@@ -28,6 +38,7 @@ function handleUserMessage() {
   // Add user message
   addMessage(message, true);
   userInput.value = '';
+  userInput.style.height = 'auto'; // Reset textarea height
 
   // Show thinking indicator
   const typingIndicator = document.createElement('div');

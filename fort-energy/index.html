@@ -333,16 +333,25 @@ Dream-Based Discoverydata-astro-cid-qcvovfap> Hamzuu AI: Your Personal Guide to
       transition: all 0.3s ease;
       backdrop-filter: blur(5px);
       z-index: 2;
+      padding: 0;
+      margin: 0;
+      outline: none;
     }
 
     .send-button:hover {
-      background: rgba(45, 98, 140, 0.3);
+      background: rgba(45, 98, 140, 0.5);
+      transform: translateY(50%) scale(1.05);
+    }
+
+    .send-button:active {
+      transform: translateY(50%) scale(0.95);
     }
 
     .send-button svg {
       width: 20px;
       height: 20px;
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      stroke: white;
     }
 
     .beta-message {
