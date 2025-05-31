@@ -12,7 +12,15 @@
       "destination": "/fort-energy/index.html"
     },
     {
+      "source": "/fort-energy/",
+      "destination": "/fort-energy/index.html"
+    },
+    {
       "source": "/trading",
+      "destination": "/trading/index.html"
+    },
+    {
+      "source": "/trading/",
       "destination": "/trading/index.html"
     },
     {
@@ -20,7 +28,15 @@
       "destination": "/maritime/index.html"
     },
     {
+      "source": "/maritime/",
+      "destination": "/maritime/index.html"
+    },
+    {
       "source": "/capital",
+      "destination": "/capital/index.html"
+    },
+    {
+      "source": "/capital/",
       "destination": "/capital/index.html"
     },
     {
