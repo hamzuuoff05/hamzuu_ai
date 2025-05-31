@@ -63,6 +63,16 @@ function initMobileMenu() {
                 toggleMenu();
             }
         });
+
+        // Close menu when a menu link is clicked
+        const menuLinks = menu.querySelectorAll('.nav-link');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (menu.classList.contains('active')) {
+                    toggleMenu();
+                }
+            });
+        });
     }
 }
 
