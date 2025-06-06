@@ -1,81 +1,113 @@
-// Simple Chat Interface
 let chatMessages, userInput, sendButton;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   console.log('Initializing chat interface...');
-  
+
   // Initialize elements
   chatMessages = document.getElementById('chatMessages');
   userInput = document.getElementById('userInput');
   sendButton = document.getElementById('sendButton');
 
-  // Log element status
   console.log('Chat elements status:', {
     chatMessages: !!chatMessages,
     userInput: !!userInput,
     sendButton: !!sendButton
   });
 
-  // Make sure elements exist
   if (!chatMessages || !userInput || !sendButton) {
     console.error('Required chat elements not found');
     return;
   }
 
-  // Fix for Enter key
-  userInput.addEventListener('keypress', function(e) {
+  // Force scroll to top on page load
+  window.scrollTo(0, 0);
+
+  // Delay input focus to avoid auto-scroll to chat
+  setTimeout(() => {
+    userInput.focus();
+  }, 500);
+
+  // Send on Enter
+  userInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleUserMessage();
     }
   });
 
-  // Fix for send button
-  sendButton.addEventListener('click', function(e) {
+  // Send on button click
+  sendButton.addEventListener('click', function (e) {
     e.preventDefault();
     handleUserMessage();
   });
 
   // Auto-resize textarea
-  userInput.addEventListener('input', function() {
+  userInput.addEventListener('input', function () {
     this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
+    this.style.height = this.scrollHeight + 'px';
   });
-
-  // Focus input on load
-  userInput.focus();
 });
 
 function handleUserMessage() {
   const message = userInput.value.trim();
   if (!message) return;
-  
-  // Add user message
+
   addMessage(message, true);
   userInput.value = '';
-  userInput.style.height = 'auto'; // Reset textarea height
-  userInput.focus(); // Keep focus on input
+  userInput.style.height = 'auto';
+  setTimeout(() => userInput.focus(), 300);
 
-  // Show thinking indicator
+  // Typing indicator
   const typingIndicator = document.createElement('div');
   typingIndicator.className = 'message ai-message';
-  typingIndicator.innerHTML = '<div class="message-content">AI is thinking...</div>';
+  typingIndicator.innerHTML = '<div class="message-content">Hamzuu is thinking...</div>';
   chatMessages.appendChild(typingIndicator);
   scrollToBottom();
 
-  // Show development message after delay
-  setTimeout(() => {
-    typingIndicator.remove();
-    addMessage("AI is currently under development and will be available soon. Thank you for your patience!");
-  }, 1000);
+  // Full character prompt for Hamzuu
+  const hamzuuPrompt = `
+You are Hamzuu, a highly personalized, friendly AI mentor designed to help people discover their true dream career. You speak like a warm, human friend — full of kindness, a little humor, and deep insight. Your job is to gently guide the user through 10 questions that uncover their ambition, passion, or dream job — even if they are confused or lost. After learning about them, suggest 3 pathways:
+
+1. College Pathway – real colleges based on their marks and budget.
+2. Offline Pathway – coaching centers or training (show "Coming Soon").
+3. Online Pathway – self-learning resources (show "Coming Soon").
+
+You always respond positively, never robotic. You ask one question at a time, wait for their response, and never rush. This is the user's message to you:
+
+"${message}"
+
+Now respond as Hamzuu, starting a heartful, kind reply.`;
+
+  fetch('http://127.0.0.1:11434/api/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'gemma2:2b', // or the model you installed in Ollama
+      prompt: hamzuuPrompt,
+      stream: false
+    })
+  })
+    .then(response => response.json())
+    .then(data => {
+      typingIndicator.remove();
+      addMessage(data.response || '[No response received]');
+    })
+    .catch(error => {
+      typingIndicator.remove();
+      addMessage('⚠️ Error talking to Hamzuu AI: ' + error.message);
+    });
 }
 
 function addMessage(message, isUser = false) {
   const messageDiv = document.createElement('div');
   messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+
   const contentDiv = document.createElement('div');
   contentDiv.className = 'message-content';
   contentDiv.textContent = message;
+
   messageDiv.appendChild(contentDiv);
   chatMessages.appendChild(messageDiv);
   scrollToBottom();
@@ -83,4 +115,4 @@ function addMessage(message, isUser = false) {
 
 function scrollToBottom() {
   chatMessages.scrollTop = chatMessages.scrollHeight;
-} 
+}
