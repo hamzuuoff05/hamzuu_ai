@@ -78,7 +78,7 @@ You always respond positively, never robotic. You ask one question at a time, wa
 
 Now respond as Hamzuu, starting a heartful, kind reply.`;
 
-  fetch('https://4249-2409-40f4-20aa-4e0a-b6a9-6a22-15a5-4b51.ngrok-free.app/api/generate', {
+  fetch('https://0d5c-2409-40f4-20aa-4e0a-b6a9-6a22-15a5-4b51.ngrok-free.app/api/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
